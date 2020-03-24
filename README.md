@@ -7,10 +7,8 @@ Install [Docker](https://docs.docker.com/docker-for-windows/install/) and [Docke
 Install [Docker](https://docs.docker.com/docker-for-mac/install/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
 #### Linux
 Install [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
-Follow the instruction on the docker [docs](https://docs.docker.com/install/) with your coresponding platform  
-For [compose](https://docs.docker.com/compose/install/)
-## Define images
-Images are defined in docker-compose.yml with the coresponding format:
+## [Define build](https://docs.docker.com/compose/compose-file/)
+Images are defined in docker-compose.yml with the coresponding format with [build](https://docs.docker.com/compose/compose-file/#build), [name](https://docs.docker.com/compose/compose-file/#credential_spec), [network](https://github.com/docker/labs/blob/master/networking/README.md), etc:
 ```php
 name:
   build: directory/available image
@@ -19,7 +17,7 @@ name:
   volumes:
   - name: path/to/dir
   networks:
-  - docker docker container [network](https://github.com/docker/labs/blob/master/networking/README.md)
+  - docker docker container network
 ```
 Example
 ```php
