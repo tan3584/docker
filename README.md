@@ -132,3 +132,18 @@ You sould try to access the db manually using the old accoutn and create a new o
 If you get the container 
 ```exit with code 0``` 
 that mean your container have finish all it's work and exit as docker natural habit. To keep it up all time add **tty: true** will keep it up and allow you to access
+###  SQLSTATE[HY000] [2002] Connection refused
+This due to your .env host is incorrect. Mysql container run in local host **NOT** mysql service, so you need to referal to that container name/ip instead of localhost/127.0.0.1
+**Sample in magento2**
+```php
+'table_prefix' => '',
+        'connection' => [
+            'default' => [
+                'host' => 'magento-docker_db_1',
+                'dbname' => 'netpower',
+                'username' => 'root',
+                'password' => '1',
+                'active' => '1'
+            ]
+```
+**magento-docker_db_1** is mysql container name 
