@@ -106,7 +106,7 @@ WORKDIR /var/www/html
 ```
 ## Bugs and fix
 ### Changing mysql username and password
-**Scenario** When you try to edit docker yml script to change mysql user and re-build docker container
+#### Scenario When you try to edit docker yml script to change mysql user and re-build docker container
 ```php
  db:
     image: mysql:5.7
@@ -123,12 +123,12 @@ WORKDIR /var/www/html
       - appnet
 ```
 Docker will run as normal and no user/password was changed/created due to docker-compose does extra work to preserve volumes between runs
-### Solution
+#### Solution
 **For new container and doesnt have anything init**
 ```docker-compose rm -v``` delete docker managed volumes, but **NOT** bind mounted "volumes".
 **For db that already in function**
 You sould try to access the db manually using the old accoutn and create a new one
-### Exit code 0: 
+#### Exit code 0: 
 If you get the container 
 ```exit with code 0``` 
 that mean your container have finish all it's work and exit as docker natural habit. To keep it up all time add **tty: true** will keep it up and allow you to access
