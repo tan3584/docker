@@ -7,6 +7,8 @@ Install [Docker](https://docs.docker.com/docker-for-windows/install/) and [Docke
 Install [Docker](https://docs.docker.com/docker-for-mac/install/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
 #### Linux
 Install [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
+## Usage
+Coppy your magento to source/ directory and begin to build container
 ## [Define build](https://docs.docker.com/compose/compose-file/)
 Images are defined in docker-compose.yml with the coresponding format with [build](https://docs.docker.com/compose/compose-file/#build), [name](https://docs.docker.com/compose/compose-file/#credential_spec), [network](https://github.com/docker/labs/blob/master/networking/README.md), etc:
 ```php
