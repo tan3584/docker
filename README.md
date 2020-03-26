@@ -51,6 +51,10 @@ php:
     networks:
       - appnet
 ```
+### Important note: 
+If you get the container 
+```exit with code 0``` 
+that mean your container have finish all it's work and exit as docker natural habit. To keep it up all time add **tty: true** will keep it up and allow you to access
 ## [Dockerfile](https://docs.docker.com/engine/reference/builder/)
 Basically, it's a script for docker to automatically build an image base on the instruoction in the file
 #### Basic format
