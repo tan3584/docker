@@ -51,10 +51,6 @@ php:
     networks:
       - appnet
 ```
-### Important note: 
-If you get the container 
-```exit with code 0``` 
-that mean your container have finish all it's work and exit as docker natural habit. To keep it up all time add **tty: true** will keep it up and allow you to access
 ## [Dockerfile](https://docs.docker.com/engine/reference/builder/)
 Basically, it's a script for docker to automatically build an image base on the instruoction in the file
 #### Basic format
@@ -108,3 +104,31 @@ zlib.output_compression = On' >> /usr/local/etc/php.ini
 
 WORKDIR /var/www/html
 ```
+## Bugs and fix
+### Changing mysql username and password
+**Scenario** When you try to edit docker yml script to change mysql user and re-build docker container
+```php
+ db:
+    image: mysql:5.7
+    volumes:
+      - db_data1:/var/lib/mysql
+    ports:
+      - 32011:3201
+    environment:
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: local
+       MYSQL_USER: root
+       MYSQL_PASSWORD: root
+    networks:
+      - appnet
+```
+Docker will run as normal and no user/password was changed/created due to docker-compose does extra work to preserve volumes between runs
+### Solution
+**For new container and doesnt have anything init**
+```docker-compose rm -v``` delete docker managed volumes, but **NOT** bind mounted "volumes".
+**For db that already in function**
+You sould try to access the db manually using the old accoutn and create a new one
+### Exit code 0: 
+If you get the container 
+```exit with code 0``` 
+that mean your container have finish all it's work and exit as docker natural habit. To keep it up all time add **tty: true** will keep it up and allow you to access
