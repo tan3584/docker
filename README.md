@@ -162,3 +162,9 @@ zlib.output_compression = On' >> /usr/local/etc/php.ini
 
 WORKDIR /var/www/html
 ```
+## Import sql databe to docker container
+1. Build and start up your docker container
+2. Run below comand
+```php
+docker exec -i [Mysql_container_name] mysql -u [username] -p [db_name] < [sql file]
+```
