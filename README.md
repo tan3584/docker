@@ -168,3 +168,7 @@ WORKDIR /var/www/html
 ```php
 docker exec -i [Mysql_container_name] mysql -u [username] -p [db_name] < [sql file]
 ```
+## See container ip
+```php
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
+```
