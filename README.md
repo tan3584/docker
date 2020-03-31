@@ -263,3 +263,4 @@ data blocks changed from 29096960 to 37484544
 ```
 6. Execute ```df -h``` to confirm that new disk size is available to the Virtual Machine
 7. Restart your VM 
+# Host multiple website with Nginx as a reverse-proxy
