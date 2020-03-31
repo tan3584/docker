@@ -174,7 +174,7 @@ docker exec -i [Mysql_container_name] mysql -u [username] -p [db_name] < [sql fi
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
 ```
 # Storage issue
-docker usually consum lots of disk space, when delete the container the consumed space still there, you can either expand the disk space or remove docker and reinstall it via **yum**/**apt** 
+docker usually consumed lots of disk space, when delete the container the consumed space still there, you can either expand the disk space or remove docker and reinstall it via **yum**/**apt** 
 ## Exspand disk space on vmware
 Here a step by step how to extend a virtual disk in vmware
 #### In Virtual Machine setting
