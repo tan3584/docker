@@ -4,6 +4,7 @@ A basic docker isntallation and knowledges
 [Usage](#Usage)  
 [Errors](#Errors-and-fix)  
 [Knowledge](#Define-build)  
+[Storage Issue](#Storage-issue)
 ## Requirements
 #### Window
 Install [Docker](https://docs.docker.com/docker-for-windows/install/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
@@ -172,3 +173,93 @@ docker exec -i [Mysql_container_name] mysql -u [username] -p [db_name] < [sql fi
 ```php
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
 ```
+# Storage issue
+docker usually consum lots of disk space, when delete the container the consumed space still there, you can either expand the disk space or remove docker and reinstall it via **yum**/**apt** 
+## Exspand disk space on vmware
+Here a step by step how to extend a virtual disk in vmware
+#### In Virtual Machine setting
+1. Power off your vm
+2. Navigate to the current vm **setting -> Hard disk -> Expand disk capacity**
+#### Extend partition within a Virtual Machine
+1. Switch to root user and exercute ```fdisk -l ```
+```php fdisk -l 
+Disk /dev/sda: 171.8 GB, 171798691840 bytes, 335544320 sectors
+```
+2. Using ```fdisk```, create a new partition on the ```/dev/sda``` device. Enter ```n```, to create a new partition:
+```php
+# fdisk /dev/sda
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+Command (m for help): n
+```
+3. Now choose ```p``` to create a new primary partition
+4. Choose your partition number. Since we already had ```/dev/sda1``` and ```/dev/sda2```, the logical number would be 3
+```
+Partition number (3,4, default 3): 3
+```
+5. Choose the first and last sectors for new partition, if you hit ENTER, then by default new partition will use all available disk space
+6. Now follow the command to change the partition type
+```php
+Command (m for help): t
+Partition number (1-3, default 3): 3
+Hex code (type L to list all codes): 8e
+Changed type of partition 'Linux' to 'Linux LVM'
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+```
+7. Scan for newly created partition
+```php
+partprobe -s
+/dev/sda: msdos partitions 1 2 3
+```
+#### Extend the Logical Volume with the new partition
+1. Create the physical volume as a basis for your LVM. Please replace /dev/sda3 with the newly created partition.
+```php
+# pvcreate /dev/sda3
+Physical volume "/dev/sda3" successfully created
+```
+2. Now find out how your Volume Group is called. In my case it's ```centos```
+```php
+--- Volume group ---
+VG Name               centos
+...
+```
+3. Extend that Volume Group by adding the newly created physical volume to it
+```php
+# vgextend centos /dev/sda3
+
+Volume group "centos" successfully extended
+```
+4. Check the logical volumes available on system using command ```ls /dev/[Groupname]```, centos is Groupname in my case
+To extend the logical volume ```root```, execute command:
+
+```php
+# lvextend /dev/cl/root /dev/sda3
+Size of logical volume cl/root changed from 111.00 GiB (28415 extents) to 142.99 GiB (36606 extents).
+Logical volume cl/root successfully resized.
+```
+5. All that remains now, is to resize the file system to the volume group. Execute ```xfs_growfs``` command as shown below (replace centos-root with the name of volume group on your system)
+```php 
+# xfs_growfs /dev/mapper/centos-root
+meta-data=/dev/mapper/centos-root    isize=512    agcount=4, agsize=7274240 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=29096960, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=14207, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 29096960 to 37484544
+```
+6. Execute ```df -h``` to confirm that new disk size is available to the Virtual Machine
+7. Restart your VM 
